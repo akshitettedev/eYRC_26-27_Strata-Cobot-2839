@@ -81,6 +81,25 @@ SYSTEM_PACKAGES=(
   libssl3t64
 )
 
+# The Gazebo stack this release was built and tested with (26 Sep 2026: gz-sim 8.15.0,
+# sdformat 14.9.0, gz-common 5.9.0, gz-physics 7.8.0, gz-transport 13.6.0, ros-gz 1.0.24).
+# An older version is upgraded; a newer one is reported, since it has not been tested.
+GAZEBO_TESTED_VERSIONS=(
+  "ros-jazzy-gz-sim-vendor 0.0.13"
+  "ros-jazzy-sdformat-vendor 0.0.14"
+  "ros-jazzy-gz-common-vendor 0.0.10"
+  "ros-jazzy-gz-physics-vendor 0.0.9"
+  "ros-jazzy-gz-transport-vendor 0.0.9"
+  "ros-jazzy-gz-msgs-vendor 0.0.8"
+  "ros-jazzy-gz-math-vendor 0.0.11"
+  "ros-jazzy-gz-sensors-vendor 0.0.6"
+  "ros-jazzy-gz-rendering-vendor 0.0.7"
+  "ros-jazzy-gz-ros2-control 1.2.20"
+  "ros-jazzy-ros-gz-sim 1.0.24"
+  "ros-jazzy-ros-gz-bridge 1.0.24"
+  "ros-jazzy-ros-gz-interfaces 1.0.24"
+)
+
 BUILD_PACKAGES=(
   build-essential
   cmake
@@ -280,6 +299,34 @@ survey_group "Tools" "${TOOLS_PACKAGES[@]}"
 survey_group "Python modules" "${PYTHON_PACKAGES[@]}"
 survey_group "Shared libraries for the prebuilt binaries" "${SYSTEM_PACKAGES[@]}"
 survey_group "Build tools" "${BUILD_PACKAGES[@]}"
+
+section "Gazebo versions"
+TO_UPGRADE=()
+for entry in "${GAZEBO_TESTED_VERSIONS[@]}"; do
+  pkg=${entry% *}
+  want=${entry#* }
+  have=$(dpkg-query -W -f='${Version}' "$pkg" 2>/dev/null || true)
+  have=${have%%-*}
+  if [ -z "$have" ]; then
+    continue   # not installed yet: the groups above install it, at the current version
+  elif dpkg --compare-versions "$have" lt "$want"; then
+    missing "$pkg $have, older than the tested $want"
+    TO_UPGRADE+=("$pkg")
+  elif dpkg --compare-versions "$have" gt "$want"; then
+    ok "$pkg $have (newer than the tested $want -- report anything odd on the forum)"
+  else
+    ok "$pkg $have"
+  fi
+done
+if [ "${#TO_UPGRADE[@]}" -gt 0 ]; then
+  if [ "$CHECK_ONLY" -eq 1 ]; then
+    info "would upgrade: ${TO_UPGRADE[*]}"
+  else
+    $SUDO apt-get install -y --only-upgrade "${TO_UPGRADE[@]}" ||
+      die "the Gazebo upgrade failed. Run 'sudo apt update && sudo apt upgrade' and run this again."
+    ok "Gazebo packages upgraded to the tested versions"
+  fi
+fi
 
 section "Summary"
 

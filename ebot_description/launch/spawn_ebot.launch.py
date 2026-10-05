@@ -3,7 +3,7 @@
 '''
 Spawn the eBot into a running Gazebo world and bridge its topics.
 
-The world must already be up. task0.launch.py starts the world and includes this file,
+The world must already be up. task2b.launch.py starts the world and includes this file,
 so it is not normally launched on its own.
 '''
 
