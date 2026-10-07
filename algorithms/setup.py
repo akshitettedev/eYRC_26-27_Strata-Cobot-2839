@@ -32,6 +32,7 @@ SCRIPTS = [
     # Your nodes go here, for example:
     #'scripts/task1a/ore_detector.py',
     'scripts/task1b/arm_waypoints.py',
+    'scripts/task1c/path_follower.py',
     # 'scripts/task1c/task1c.py',
 ]
 
