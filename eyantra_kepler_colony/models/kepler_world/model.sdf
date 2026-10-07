@@ -73,7 +73,7 @@
     </joint>
 
     <link name="cargo_rover_link">
-      <pose>-1.03719 2.5537 0.568798 1.57079 0.0 0.0</pose>
+      <pose>-0.93719 2.5537 0.568798 1.57079 0.0 0.0</pose>
       <inertial>
         <mass>100.0</mass>
         <inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>

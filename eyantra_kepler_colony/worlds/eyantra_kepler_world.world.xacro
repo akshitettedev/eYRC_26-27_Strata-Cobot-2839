@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
 <sdf version="1.9" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:arg name="plugin_enabled" default=""/>
-  <xacro:arg name="rocks_enabled" default=""/>
-  <xacro:arg name="ores_enabled" default=""/>
-  <xacro:arg name="path_publishing_enabled" default=""/>
-  <xacro:arg name="ore_package_enabled" default=""/>
 
   <world name="eyantra_kepler_world">
 
@@ -23,23 +18,6 @@
     <plugin filename="gz-sim-forcetorque-system" name="gz::sim::systems::ForceTorque"></plugin>
 
     <plugin filename="libkepler_arena_plugin.so" name="rock_arena::KeplerArenaPlugin">
-
-      <xacro:if value="${'$(arg plugin_enabled)' != ''}">
-        <plugin_enabled>$(arg plugin_enabled)</plugin_enabled>
-      </xacro:if>
-      <xacro:if value="${'$(arg rocks_enabled)' != ''}">
-        <rocks_enabled>$(arg rocks_enabled)</rocks_enabled>
-      </xacro:if>
-      <xacro:if value="${'$(arg ores_enabled)' != ''}">
-        <ores_enabled>$(arg ores_enabled)</ores_enabled>
-      </xacro:if>
-      <xacro:if value="${'$(arg path_publishing_enabled)' != ''}">
-        <path_publishing_enabled>$(arg path_publishing_enabled)</path_publishing_enabled>
-      </xacro:if>
-      <xacro:if value="${'$(arg ore_package_enabled)' != ''}">
-        <ore_package_enabled>$(arg ore_package_enabled)</ore_package_enabled>
-      </xacro:if>
-
     </plugin>
 
     <include>

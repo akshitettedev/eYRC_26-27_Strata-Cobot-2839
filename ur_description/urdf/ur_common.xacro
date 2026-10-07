@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:include filename="$(find ur_description)/urdf/ur7e_parameters.xacro" />
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
@@ -39,19 +40,18 @@
     <mesh filename="${mesh}" />
   </xacro:macro>
 
-  <xacro:macro name="read_model_data"
-    params="joint_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file force_abs_paths">
+  <xacro:macro name="read_model_data" params="force_abs_paths">
 
     <xacro:property name="force_abs_paths" value="${force_abs_paths}" scope="parent" />
 
     <xacro:property name="config_joint_limit_parameters"
-      value="${xacro.load_yaml(joint_limits_parameters_file)}" />
+      value="${ur7e_joint_limits}" />
     <xacro:property name="config_kinematics_parameters"
-      value="${xacro.load_yaml(kinematics_parameters_file)}" />
+      value="${ur7e_kinematics}" />
     <xacro:property name="config_physical_parameters"
-      value="${xacro.load_yaml(physical_parameters_file)}" />
+      value="${ur7e_physical}" />
     <xacro:property name="config_visual_parameters"
-      value="${xacro.load_yaml(visual_parameters_file)}" />
+      value="${ur7e_visual}" />
 
     <xacro:property name="sec_limits" value="${config_joint_limit_parameters['joint_limits']}" />
     <xacro:property name="sec_inertia_parameters"

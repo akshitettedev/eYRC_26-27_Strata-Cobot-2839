@@ -7,19 +7,22 @@ package_name = 'algorithms'
 #
 # The executable name is the FILE NAME, .py included:
 #
-#     ros2 run algorithms task1b.py
+#     ros2 run algorithms task2B_planning.py
 #
 # `ros2 pkg executables algorithms` lists whatever is currently installed, which is the
 # quickest way to check a new file actually made it in. Before you add anything it is
 # empty, and that is correct.
 #
-# START BY COPYING A BOILERPLATE. The three in boilerplate/ are the starting points and
+# START BY COPYING A BOILERPLATE. The ones in boilerplate/ are the starting points and
 # are deliberately NOT in this list: copy the one you want into the matching
-# scripts/task1<x>/ folder under your own name, and add that copy here. The originals
+# scripts/task<x>/ folder under your own name, and add that copy here. The originals
 # stay clean to refer back to.
 #
-#     cp boilerplate/task1b_boilerplate.py scripts/task1b/task1b.py
-#     chmod +x scripts/task1b/task1b.py
+#     cp boilerplate/task2b_boilerplate.py scripts/task2b/task2B_planning.py
+#     chmod +x scripts/task2b/task2B_planning.py
+#
+# Every script installs into the same directory, so no two may share a name, even in
+# different folders.
 #
 # Three things that catch people out:
 #
@@ -38,7 +41,7 @@ SCRIPTS = [
 
 setup(
     name=package_name,
-    version='1.0.0',
+    version='2.0.0',
     packages=[],
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),

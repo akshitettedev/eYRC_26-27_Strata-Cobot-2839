@@ -7,16 +7,11 @@ Spawn the UR7e arm into a running Gazebo world and bring up its controllers.
 '''
 
 from launch import LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument,
-    RegisterEventHandler,
-)
-from launch.conditions import IfCondition
+from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import (
     Command,
     FindExecutable,
-    LaunchConfiguration,
     PathJoinSubstitution,
 )
 from launch_ros.actions import Node
@@ -24,37 +19,18 @@ from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
 
+_UR_TYPE = "ur7e"
+_NAME = "ur7e"
+_TF_PREFIX = ""
+_X = "-0.597278"
+_Y = "1.8653"
+_Z = "0.8825"
+_ROLL = "0.0"
+_PITCH = "0.0"
+_YAW = "0.0"
+
+
 def generate_launch_description():
-    declared_arguments = [
-        DeclareLaunchArgument(
-            "ur_type",
-            default_value="ur7e",
-            description="UR model to build.",
-        ),
-        DeclareLaunchArgument(
-            "name",
-            default_value="ur7e",
-            description="Model name in gz.",
-        ),
-
-        DeclareLaunchArgument("x", default_value="-0.597278"),
-        DeclareLaunchArgument("y", default_value="1.8653"),
-        DeclareLaunchArgument("z", default_value="0.8825"),
-        DeclareLaunchArgument("roll", default_value="0.0"),
-        DeclareLaunchArgument("pitch", default_value="0.0"),
-        DeclareLaunchArgument("yaw", default_value="0.0"),
-        DeclareLaunchArgument(
-            "launch_rviz",
-            default_value="false",
-            description="Open RViz with the arm display config.",
-        ),
-    ]
-
-    ur_type = LaunchConfiguration("ur_type")
-    name = LaunchConfiguration("name")
-    tf_prefix = ""
-    launch_rviz = LaunchConfiguration("launch_rviz")
-
     controllers_file = PathJoinSubstitution(
         [FindPackageShare("ur_description"), "config", "ur_controllers.yaml"]
     )
@@ -67,16 +43,16 @@ def generate_launch_description():
         "robot_description": ParameterValue(
             Command([
                 FindExecutable(name="xacro"), " ", xacro_file,
-                " ", "name:=", name,
-                " ", "ur_type:=", ur_type,
-                " ", "tf_prefix:=", tf_prefix,
+                " ", "name:=", _NAME,
+                " ", "ur_type:=", _UR_TYPE,
+                " ", "tf_prefix:=", _TF_PREFIX,
                 " ", "force_abs_paths:=true",
-                " ", "mount_x:=", LaunchConfiguration("x"),
-                " ", "mount_y:=", LaunchConfiguration("y"),
-                " ", "mount_z:=", LaunchConfiguration("z"),
-                " ", "mount_roll:=", LaunchConfiguration("roll"),
-                " ", "mount_pitch:=", LaunchConfiguration("pitch"),
-                " ", "mount_yaw:=", LaunchConfiguration("yaw"),
+                " ", "mount_x:=", _X,
+                " ", "mount_y:=", _Y,
+                " ", "mount_z:=", _Z,
+                " ", "mount_roll:=", _ROLL,
+                " ", "mount_pitch:=", _PITCH,
+                " ", "mount_yaw:=", _YAW,
                 " ", "simulation_controllers:=", controllers_file,
             ]),
             value_type=str,
@@ -108,7 +84,7 @@ def generate_launch_description():
         executable="create",
         arguments=[
             "-topic", "robot_description",
-            "-name", name,
+            "-name", _NAME,
         ],
         parameters=[{"use_sim_time": True}],
         output="screen",
@@ -147,21 +123,6 @@ def generate_launch_description():
         output="screen",
     )
 
-    rviz = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        arguments=[
-            "-d",
-            PathJoinSubstitution(
-                [FindPackageShare("ur_description"), "rviz", "ur7e.rviz"]
-            ),
-        ],
-        parameters=[{"use_sim_time": True}],
-        condition=IfCondition(launch_rviz),
-        output="screen",
-    )
-
     def spawner(controller):
         args = [
             controller,
@@ -190,8 +151,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription(
-        declared_arguments
-        + [
+        [
             robot_state_publisher,
             flange_to_end_effector,
             spawn_entity,
@@ -199,7 +159,6 @@ def generate_launch_description():
             camera_bridge,
             camera_depth_bridge,
             camera_points,
-            rviz,
             RegisterEventHandler(
                 OnProcessExit(
                     target_action=spawn_entity,

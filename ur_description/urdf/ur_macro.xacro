@@ -8,10 +8,6 @@
     tf_prefix
     parent
     *origin
-    joint_limits_parameters_file
-    kinematics_parameters_file
-    physical_parameters_file
-    visual_parameters_file
     safety_limits:=false
     safety_pos_margin:=0.15
     safety_k_position:=20
@@ -19,12 +15,7 @@
     tool_length:=0.02041
     ">
 
-    <xacro:read_model_data
-      joint_limits_parameters_file="${joint_limits_parameters_file}"
-      kinematics_parameters_file="${kinematics_parameters_file}"
-      physical_parameters_file="${physical_parameters_file}"
-      visual_parameters_file="${visual_parameters_file}"
-      force_abs_paths="${force_abs_paths}" />
+    <xacro:read_model_data force_abs_paths="${force_abs_paths}" />
 
     <link name="${tf_prefix}base_link" />
     <link name="${tf_prefix}base_link_inertia">
